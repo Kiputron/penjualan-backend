@@ -2,11 +2,18 @@
 	"name": "penjualan-backend",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
-  "author": "rifki putra s",
-  "license": "ISC",
+	"main": "app.js",
+	"author": "rifki putra s",
+	"license": "ISC",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"transpile": "babel ./src --out-dir dist -s",
+		"build": "npm run clean && npm run transpile",
+		"clean": "rimraf dist",
+		"start": "node dist/app.js",
+		"dev": "nodemon --exec babel-node src/app.js",
+		"db:migrate": "npx sequelize-cli db:migrate",
+		"db:migrate:undo": "npx sequelize-cli db:migrate:undo",
+		"db:migrate:undo:all": "npx sequelize-cli db:migrate:undo:all"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.12.5",
