@@ -38,9 +38,9 @@ body:
 }
 ```
 
-<a name="update-Item-category"></a>
+<a name="edit-Item-category"></a>
 
-### Update Item Category
+### Edit Item Category
 
 `[PUT]/api/v1.0/item-category/{id}`
 
