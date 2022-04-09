@@ -6,6 +6,7 @@ const route = express.Router();
 
 export default function TransactionRouter() {
 	route.get("/", TransactionController.index);
+	route.get("/report", TransactionController.report);
 	route.post(
 		"/",
 		TransactionValidator.createData,

@@ -1,9 +1,9 @@
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import { db } from "../../models";
 import { ErrorHandler, httpResponse } from "../../utils/http";
 import moment from "moment";
 
-const { transaction, items } = db.models;
+const { transaction, items, item_category } = db.models;
 export default {
 	index: async (req, res, next) => {
 		try {
@@ -117,13 +117,11 @@ export default {
 
 			let data = await transaction.findByPk(req.params.id);
 			if (!data) throw new ErrorHandler("Data Not Found", 404);
-			console.log("step 1");
+
 			/* return old item qty */
 			let oldItem = await items.findByPk(data.item_id);
 			oldItem.qty = oldItem.qty + data.qty;
 			await oldItem.save();
-
-			console.log("step 2");
 
 			/* reduce stock items */
 			let item = await items.findByPk(item_id);
@@ -160,6 +158,66 @@ export default {
 			httpResponse(res, "success", "Delte Transaction successfully");
 		} catch (err) {
 			next(new ErrorHandler(err.message, err.status || 500));
+		}
+	},
+
+	report: async (req, res, next) => {
+		try {
+			let { start_date, end_date } = req.query;
+			let filterDate;
+
+			if (start_date && end_date) {
+				filterDate = {
+					[Op.between]: [
+						moment(start_date).startOf("days"),
+						moment(end_date).endOf("days"),
+					],
+				};
+			} else if (start_date && !end_date) {
+				filterDate = { [Op.gte]: moment(start_date).startOf("days") };
+			} else if (!start_date && end_date) {
+				filterDate = { [Op.lte]: moment(end_date).endOf("days") };
+			} else {
+				filterDate = { [Op.lte]: moment().add(1, "years") };
+			}
+
+			let data = await item_category.findAll({
+				attributes: ["id", "category_name"],
+				include: [
+					{
+						association: "items",
+						attributes: ["id", "item_name"],
+						include: [
+							{
+								association: "transactions",
+								attributes: ["id", "qty", "stock", "transaction_date"],
+							},
+						],
+					},
+				],
+				distinct: true,
+			});
+
+			let vanilla = JSON.parse(JSON.stringify(data));
+
+			vanilla.forEach((it) => {
+				it.items.forEach((itx) => {
+					itx.total = itx.transactions.reduce((a, { qty }) => a + qty, 0);
+				});
+			});
+
+			vanilla.forEach((it) => {
+				it.subtotal = it.items.reduce((a, { total }) => a + total, 0);
+			});
+
+			httpResponse(
+				res,
+				"success",
+				"get transaction report successfully",
+				vanilla
+			);
+		} catch (err) {
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 };
