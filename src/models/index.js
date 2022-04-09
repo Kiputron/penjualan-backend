@@ -22,7 +22,8 @@ const db = new Sequelize(
 			timestamps: true,
 			createdAt: "created_at",
 			updatedAt: "updated_at",
-			// paranoid: true, for deleted_at
+			deletedAt: "deleted_at",
+			paranoid: true, //for deleted_at
 		},
 		dialectOptions: {
 			useUTC: true, //for reading from database
@@ -46,12 +47,18 @@ async function connectionCheck() {
 }
 
 let files = fs.readdirSync(__dirname + "/");
+let filesModel = fs.readdirSync(__dirname + "/module");
+
 for (let f of files) {
 	if (f.indexOf("index.js") >= 0) continue;
 	if (f.indexOf("relation_setup.js") >= 0) continue;
 	if (f.indexOf("migrations") >= 0) continue;
 	if (f.indexOf(".log") >= 0) continue;
+	if (f.indexOf("module") >= 0) continue;
 	db.import("./" + f);
+}
+for (let m of filesModel) {
+	db.import("./module/" + m);
 }
 
 db.Sequelize = Sequelize;

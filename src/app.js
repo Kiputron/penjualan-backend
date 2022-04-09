@@ -1,9 +1,12 @@
 import express from "express";
+import cors from "cors";
+import helmet from "helmet";
 import { prefix } from "./helpers/version";
 import router from "./routes";
 import bodyParser from "body-parser";
 import { connectionCheck } from "./models";
 import logger from "./utils/logger";
+import handleError from "./middleware/module/error-handler";
 const app = express();
 const MODE = process.env.MODE || "test";
 const port = process.env.PORT || 3001;
@@ -15,7 +18,14 @@ const startServer = async () => {
 			extended: true,
 		})
 	);
+
+	app.use(cors());
+	app.use(helmet());
+
 	app.use(prefix, router());
+	app.use((req, res) => {
+		res.status(404).send({ message: "Not Found" });
+	});
 
 	app.listen(port, () => {
 		console.clear();
@@ -26,6 +36,7 @@ const startServer = async () => {
 	});
 
 	connectionCheck();
+	app.use(handleError);
 };
 
 startServer();

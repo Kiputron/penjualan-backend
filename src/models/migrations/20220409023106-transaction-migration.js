@@ -2,15 +2,32 @@
 
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable("item_category", {
+		await queryInterface.createTable("transaction", {
 			id: {
 				type: Sequelize.INTEGER(11).UNSIGNED,
 				allowNull: false,
 				primaryKey: true,
 				autoIncrement: true,
 			},
-			category_name: {
-				type: Sequelize.STRING(255),
+			item_id: {
+				type: Sequelize.INTEGER(11).UNSIGNED,
+				references: {
+					model: "items",
+					key: "id",
+				},
+				onUpdate: "CASCADE",
+				onDelete: "CASCADE",
+			},
+			stock: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+			},
+			qty: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+			},
+			transaction_date: {
+				type: Sequelize.DATE,
 				allowNull: false,
 			},
 			created_at: {
@@ -29,6 +46,6 @@ module.exports = {
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("item_category");
+		await queryInterface.dropTable("transaction");
 	},
 };

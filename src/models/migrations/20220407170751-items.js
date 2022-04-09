@@ -13,7 +13,7 @@ module.exports = {
 				type: Sequelize.STRING(255),
 				allowNull: false,
 			},
-			stock: {
+			qty: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 			},
@@ -24,6 +24,7 @@ module.exports = {
 					key: "id",
 				},
 				onUpdate: "CASCADE",
+				onDelete: "CASCADE",
 			},
 
 			created_at: {
@@ -33,6 +34,10 @@ module.exports = {
 			updated_at: {
 				type: Sequelize.DATE,
 				allowNull: false,
+			},
+			deleted_at: {
+				type: Sequelize.DATE,
+				allowNull: true,
 			},
 		});
 	},

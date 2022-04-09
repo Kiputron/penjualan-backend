@@ -22,6 +22,10 @@ module.exports = function (sequelize, DataTypes) {
 				type: DataTypes.DATE,
 				allowNull: false,
 			},
+			deleted_at: {
+				type: DataTypes.DATE,
+				allowNull: true,
+			},
 		},
 		{
 			tableName: "item_category",

@@ -7,6 +7,7 @@ class ErrorHandler extends Error {
 		this.message = message;
 		this.status = status;
 		this.data = data;
+		console.log(this.message);
 	}
 }
 

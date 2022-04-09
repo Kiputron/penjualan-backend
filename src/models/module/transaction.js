@@ -2,7 +2,7 @@
 
 module.exports = function (sequelize, DataTypes) {
 	return sequelize.define(
-		"items",
+		"transaction",
 		{
 			id: {
 				type: DataTypes.INTEGER(11).UNSIGNED,
@@ -10,16 +10,20 @@ module.exports = function (sequelize, DataTypes) {
 				primaryKey: true,
 				autoIncrement: true,
 			},
-			item_name: {
-				type: DataTypes.STRING(255),
+			item_id: {
+				type: DataTypes.INTEGER(11),
 				allowNull: false,
 			},
 			stock: {
 				type: DataTypes.INTEGER(11),
 				allowNull: false,
 			},
-			category_id: {
+			qty: {
 				type: DataTypes.INTEGER(11),
+				allowNull: false,
+			},
+			transaction_date: {
+				type: DataTypes.DATE,
 				allowNull: false,
 			},
 			created_at: {
@@ -30,9 +34,13 @@ module.exports = function (sequelize, DataTypes) {
 				type: DataTypes.DATE,
 				allowNull: false,
 			},
+			deleted_at: {
+				type: DataTypes.DATE,
+				allowNull: true,
+			},
 		},
 		{
-			tableName: "items",
+			tableName: "transaction",
 		}
 	);
 };

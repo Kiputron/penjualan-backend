@@ -1,13 +1,24 @@
 import express from "express";
 import { ItemCategoryController } from "../../controllers";
+import { ItemCategoryValidator, resultValidator } from "../../validator";
 
 const route = express.Router();
 
 export default function ItemCategoryRouter() {
 	route.get("/", ItemCategoryController.index);
-	route.post("/", ItemCategoryController.store);
+	route.post(
+		"/",
+		ItemCategoryValidator.createData,
+		resultValidator,
+		ItemCategoryController.store
+	);
 	route.get("/:id", ItemCategoryController.show);
-	route.put("/:id", ItemCategoryController.update);
+	route.put(
+		"/:id",
+		ItemCategoryValidator.createData,
+		resultValidator,
+		ItemCategoryController.update
+	);
 	route.delete("/:id", ItemCategoryController.delete);
 	return route;
 }
