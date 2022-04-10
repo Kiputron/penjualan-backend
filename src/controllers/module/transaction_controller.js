@@ -1,4 +1,4 @@
-import { Op, Sequelize } from "sequelize";
+import { Op } from "sequelize";
 import { db } from "../../models";
 import { ErrorHandler, httpResponse } from "../../utils/http";
 import moment from "moment";
@@ -54,7 +54,7 @@ export default {
 			});
 			httpResponse(res, "success", "get all transaction successfully", data);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -82,7 +82,7 @@ export default {
 				201
 			);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -103,7 +103,8 @@ export default {
 				],
 			});
 
-			if (!data) throw new ErrorHandler("Data Not Found", [], 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			httpResponse(res, "success", "get one transaction successfully", data);
 		} catch (err) {
@@ -116,7 +117,8 @@ export default {
 			let { item_id, qty } = req.body;
 
 			let data = await transaction.findByPk(req.params.id);
-			if (!data) throw new ErrorHandler("Data Not Found", 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			/* return old item qty */
 			let oldItem = await items.findByPk(data.item_id);
@@ -145,10 +147,12 @@ export default {
 		try {
 			let data = await transaction.findByPk(req.params.id);
 
-			if (!data) throw new ErrorHandler("Data Not Found", 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			let item = await items.findByPk(data.item_id);
-			if (!item) throw new ErrorHandler("Data Not Found", 404);
+			if (!item)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			item.qty = item.qty + data.qty;
 
@@ -157,7 +161,7 @@ export default {
 
 			httpResponse(res, "success", "Delte Transaction successfully");
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -191,6 +195,9 @@ export default {
 							{
 								association: "transactions",
 								attributes: ["id", "qty", "stock", "transaction_date"],
+								where: {
+									transaction_date: filterDate,
+								},
 							},
 						],
 					},

@@ -18,7 +18,7 @@ export default {
 
 			httpResponse(res, "success", "get all item successfully", data);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -36,7 +36,7 @@ export default {
 				201
 			);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -44,7 +44,8 @@ export default {
 		try {
 			let data = await item_category.findByPk(req.params.id);
 
-			if (!data) throw new ErrorHandler("Data Not Found", null, 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			httpResponse(res, "success", "get one item category successfully", data);
 		} catch (err) {
@@ -55,25 +56,27 @@ export default {
 	update: async (req, res, next) => {
 		try {
 			let data = await item_category.findByPk(req.params.id);
-			if (!data) throw new ErrorHandler("Data Not Found", 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			await data.update({ ...req.body });
 
 			httpResponse(res, "success", "Update Item Category successfully", data);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
 	delete: async (req, res, next) => {
 		try {
 			let data = await item_category.findByPk(req.params.id);
-			if (!data) throw new ErrorHandler("Data Not Found", 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 			await data.destroy();
 
 			httpResponse(res, "success", "Delete Item Category successfully");
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 };

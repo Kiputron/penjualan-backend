@@ -27,7 +27,7 @@ export default {
 			});
 			httpResponse(res, "success", "get all item successfully", data);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -41,11 +41,12 @@ export default {
 				],
 			});
 
-			if (!data) throw new ErrorHandler("Data Not Found", 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			httpResponse(res, "success", "get one item successfully", data);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -57,7 +58,7 @@ export default {
 
 			httpResponse(res, "success", "Create Item successfully", insertData, 201);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -65,13 +66,14 @@ export default {
 		try {
 			let data = await items.findByPk(req.params.id);
 
-			if (!data) throw new ErrorHandler("Data Not Found", 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			await data.update({ ...req.body });
 
 			httpResponse(res, "success", "Update Item successfully", data);
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 
@@ -79,13 +81,14 @@ export default {
 		try {
 			let data = await items.findByPk(req.params.id);
 
-			if (!data) throw new ErrorHandler("Data Not Found", 404);
+			if (!data)
+				throw new ErrorHandler("Data Not Found", "Data Not Found", 404);
 
 			await data.destroy();
 
 			httpResponse(res, "success", "Delte Item  successfully");
 		} catch (err) {
-			next(new ErrorHandler(err.message, err.status || 500));
+			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
 	},
 };

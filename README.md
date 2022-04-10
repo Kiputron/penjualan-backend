@@ -19,6 +19,11 @@
 
 `[GET]/api/v1.0/item-category`
 
+```
+params:
+- category_name
+```
+
 <a name="get-one-Item-category"></a>
 
 ### Get One Item Category
