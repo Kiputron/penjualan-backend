@@ -27,10 +27,11 @@ async function stokcUpdate(val, { req }) {
 		if (data && data.qty + dataTransaction.qty < +val) {
 			throw new ErrorHandler("qty of items exceeds stock");
 		}
-	}
-	const data = await db.models.items.findByPk(req.body.item_id);
-	if (data && data.qty < +val) {
-		throw new ErrorHandler("qty of items exceeds stock");
+	} else {
+		const data = await db.models.items.findByPk(req.body.item_id);
+		if (data && data.qty < +val) {
+			throw new ErrorHandler("qty of items exceeds stock");
+		}
 	}
 }
 

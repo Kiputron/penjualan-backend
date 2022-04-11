@@ -159,7 +159,7 @@ export default {
 			await item.save();
 			await data.destroy();
 
-			httpResponse(res, "success", "Delte Transaction successfully");
+			httpResponse(res, "success", "Delete Transaction successfully");
 		} catch (err) {
 			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
