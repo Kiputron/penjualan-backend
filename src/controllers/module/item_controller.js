@@ -86,7 +86,7 @@ export default {
 
 			await data.destroy();
 
-			httpResponse(res, "success", "Delte Item  successfully");
+			httpResponse(res, "success", "Delete Item  successfully");
 		} catch (err) {
 			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}

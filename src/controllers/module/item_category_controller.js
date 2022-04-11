@@ -16,7 +16,7 @@ export default {
 				},
 			});
 
-			httpResponse(res, "success", "get all item successfully", data);
+			httpResponse(res, "success", "get all item category successfully", data);
 		} catch (err) {
 			next(new ErrorHandler(err.message, err.message, err.status || 500));
 		}
